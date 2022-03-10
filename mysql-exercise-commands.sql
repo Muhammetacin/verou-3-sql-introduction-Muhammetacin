@@ -47,33 +47,42 @@ UPDATE learners
 SET group_id = 1
 WHERE id = 2;
 
-ALTER TABLE coaches
-ADD COLUMN IF NOT EXISTS group_id INT(3) AFTER id;
+ALTER TABLE groups
+ADD COLUMN IF NOT EXISTS coach_id INT(3) AFTER id;
 
-UPDATE coaches
-SET group_id = 1
+UPDATE groups
+SET coach_id = 1
 WHERE id = 1;
 
-UPDATE coaches
-SET group_id = 2
+UPDATE groups
+SET coach_id = 2
 WHERE id = 2;
 
-UPDATE coaches
-SET group_id = 3
+UPDATE groups
+SET coach_id = 3
 WHERE id = 3;
 
-UPDATE coaches
-SET group_id = 3
-WHERE id = 4;
+UPDATE groups
+SET coach_id = 4
+WHERE id = 3;
 
 ## Show it
 SELECT * FROM learners
 LEFT JOIN groups
 ON learners.group_id = groups.id;
 
-SELECT * FROM coaches
-LEFT JOIN groups
-ON coaches.group_id = groups.id;
+SELECT * FROM groups
+LEFT JOIN coaches
+ON groups.coach_id = coaches.id;
 
 # 7.1 We want all the data: Select a coach and all related groups
+SELECT * FROM coaches
+JOIN groups ON group_id = groups.id
+JOIN learners ON groups.id = learners.id
+WHERE name = "Bert";
+
 # 7.2 We want all the data: Select all the above, but also all learners from this group who are still active
+SELECT * FROM coaches
+JOIN groups ON group_id = groups.id
+JOIN learners ON groups.id = learners.id
+WHERE (coaches.name = "Bert" AND learners.active = TRUE);
