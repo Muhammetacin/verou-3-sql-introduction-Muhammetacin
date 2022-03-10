@@ -18,6 +18,10 @@ WHERE id = 1;
 ALTER TABLE groups
 ADD COLUMN IF NOT EXISTS status TEXT AFTER max_participants;
 
+UPDATE groups
+SET status = "Snorlax is blocking the way. Perhaps playing flute might wake him up?"
+WHERE id = 1;
+
 ## Show it
 SELECT * FROM groups;
 
@@ -32,6 +36,44 @@ SELECT * FROM learners;
 
 # 6. A learner belongs to a group, and a group has a coach
 # Find a technique to make this connection in the database (what of the field is unique to a record, so we can refer to it?)
+ALTER TABLE learners
+ADD COLUMN IF NOT EXISTS group_id INT(3) AFTER id;
+
+UPDATE learners
+SET group_id = 1
+WHERE id = 1;
+
+UPDATE learners
+SET group_id = 1
+WHERE id = 2;
+
+ALTER TABLE coaches
+ADD COLUMN IF NOT EXISTS group_id INT(3) AFTER id;
+
+UPDATE coaches
+SET group_id = 1
+WHERE id = 1;
+
+UPDATE coaches
+SET group_id = 2
+WHERE id = 2;
+
+UPDATE coaches
+SET group_id = 3
+WHERE id = 3;
+
+UPDATE coaches
+SET group_id = 3
+WHERE id = 4;
+
+## Show it
+SELECT * FROM learners
+LEFT JOIN groups
+ON learners.group_id = groups.id;
+
+SELECT * FROM coaches
+LEFT JOIN groups
+ON coaches.group_id = groups.id;
 
 # 7.1 We want all the data: Select a coach and all related groups
 # 7.2 We want all the data: Select all the above, but also all learners from this group who are still active
